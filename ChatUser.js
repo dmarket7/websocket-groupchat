@@ -1,4 +1,5 @@
 /** Functionality related to chatting. */
+const axios = require('axios');
 
 // Room is an abstraction of a chat channel
 const Room = require('./Room');
@@ -58,7 +59,16 @@ class ChatUser {
 
     if (msg.type === 'join') this.handleJoin(msg.name);
     else if (msg.type === 'chat') this.handleChat(msg.text);
+    else if (msg.type === 'get-joke') this.handleJoke();
     else throw new Error(`bad message: ${msg.type}`);
+  }
+
+  async handleJoke() {
+    let joke = "Bad not funny joke.";
+    let badJoke = await axios.get('https://icanhazdadjoke.com/slack')
+    console.log(badJoke.data.attachments)
+    let jokeText = badJoke.data.attachments[0].text
+    this._send(JSON.stringify({name: this.name, type: 'get-joke', text: jokeText}));
   }
 
   /** Connection was closed: leave room, announce exit to others */

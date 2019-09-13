@@ -34,6 +34,10 @@ ws.onmessage = function(evt) {
     item = $(`<li><b>${msg.name}: </b>${msg.text}</li>`);
   }
 
+  else if (msg.type === "get-joke") {
+    item = $(`<li><b>${msg.name}: </b>${msg.text}</li>`);
+  }
+
   else {
     return console.error(`bad message: ${msg}`);
   }
@@ -62,8 +66,15 @@ $('form').submit(function (evt) {
   evt.preventDefault();
 
   let data = {type: "chat", text: $("#m").val()};
+  if(data.text === "/joke"){
+    data.type = 'get-joke';
+  }
   ws.send(JSON.stringify(data));
+  //   let joke = await axios.get('')
+  //   $('#messages').append(`<li><b>Joke: </b>Dumb dad joke!</li>`);
+  // } else {
 
   $('#m').val('');
 });
 
+console.log("WS---------->>>>>>>", ws);
